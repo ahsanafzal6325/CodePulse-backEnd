@@ -1,9 +1,14 @@
-﻿using CodePulse.API.Data;
-using CodePulse.API.Models.Domain;
-using CodePulse.API.Repositories.Interface;
+﻿using CodePulse.Domain.Entities;
+using CodePulse.Domain.Repositories;
+using CodePulse.EntityFrameworkCore.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace CodePulse.API.Repositories.Implementation
+namespace CodePulse.EntityFrameworkCore.Repositories
 {
     public class CategoryRepository : ICategoryRepository
     {
@@ -32,13 +37,7 @@ namespace CodePulse.API.Repositories.Implementation
             try
             {
                 var categories = await _dbContext.Categories.ToListAsync();
-                var categoriesDto = categories.Select(c => new Category
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    UrlHandle = c.UrlHandle
-                });
-                return categoriesDto;
+                return categories;
             }
             catch (Exception)
             {
@@ -52,13 +51,19 @@ namespace CodePulse.API.Repositories.Implementation
             try
             {
                 var category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.Id == id);
-                var categoryDto = new Category
-                {
-                    Id = category.Id,
-                    Name = category.Name,
-                    UrlHandle = category.UrlHandle
-                };
-                return categoryDto;
+                return category;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public async Task UpdateAsync(Category category)
+        {
+            try
+            {
+                _dbContext.Categories.Update(category);
+                await _dbContext.SaveChangesAsync();
             }
             catch (Exception)
             {

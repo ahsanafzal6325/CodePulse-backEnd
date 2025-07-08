@@ -1,7 +1,6 @@
-﻿using CodePulse.API.Data;
-using CodePulse.API.Models.Domain;
-using CodePulse.API.Models.DTO;
-using CodePulse.API.Repositories.Interface;
+﻿using CodePulse.Application.Categories;
+using CodePulse.Application.Categories.Dto;
+using CodePulse.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,10 +11,12 @@ namespace CodePulse.API.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly ICategoryRepository _categoryRepository;
-        public CategoriesController(ICategoryRepository categoryRepository)
+        private readonly ICategoryAppService _categoryAppService;
+        private readonly ILogger<CategoriesController> _logger;
+        public CategoriesController(ICategoryAppService categoryAppService, ILogger<CategoriesController> logger)
         {
-            _categoryRepository = categoryRepository;
+            _categoryAppService = categoryAppService;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -23,24 +24,9 @@ namespace CodePulse.API.Controllers
         {
             try
             {
-                // Map DTO to Domain Model
-                var category = new Category
-                {
-                    Name = request.Name,
-                    UrlHandle = request.UrlHandle
-                };
-                var result = await _categoryRepository.CreateAsync(category);
-
-                //Domain model to DTO 
-
-                var response = new Category
-                {
-                    Id = category.Id,
-                    Name = category.Name,
-                    UrlHandle = category.UrlHandle
-                };
-
-                return Ok(response);
+                _logger.LogInformation("Creating category with name {Name} in API", request.Name);
+                var result = await _categoryAppService.CreateAsync(request);
+                return Ok(result);
             }
             catch (Exception)
             {
@@ -55,7 +41,7 @@ namespace CodePulse.API.Controllers
         {
             try
             {
-                var categories = await _categoryRepository.GetAllAsync();
+                var categories = await _categoryAppService.GetAllAsync();
                 return Ok(categories);
             }
             catch (Exception)
@@ -64,16 +50,32 @@ namespace CodePulse.API.Controllers
             }
         }
         [HttpGet]
-        [Route("{id:guid}")]
+        [Route("{id:Guid}")]
         public async Task<IActionResult> GetCategoryById(Guid id)
         {
             try
             {
-                var category = await _categoryRepository.GetById(id);
+                var category = await _categoryAppService.GetById(id);
                 if (category == null)
                 {
                     return NotFound();
                 }
+                return Ok(category);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> UpdateCategory([FromRoute] Guid id, UpdateCategoryRequest request)
+        {
+            try
+            {
+                var category = await _categoryAppService.UpdateAsync(id,request);
                 return Ok(category);
             }
             catch (Exception)
