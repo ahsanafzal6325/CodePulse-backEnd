@@ -10,9 +10,9 @@ namespace CodePulse.Application.Categories
 {
     public interface ICategoryAppService
     {
-        Task<Category> CreateAsync(CreateCategoryRequest category);
+        Task<Category> CreateAsync(CreateCategoryRequestDto category);
         Task<IEnumerable<CategoryDto>> GetAllAsync();
         Task<CategoryDto> GetById(Guid id);
-        Task<Category> UpdateAsync(Guid id, UpdateCategoryRequest request);
+        Task<Category> UpdateAsync(Guid id, UpdateCategoryRequestDto request);
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CodePulse.Application.Categories.Dto
 {
-    public class UpdateCategoryRequest
+    public class CreateCategoryRequestDto
     {
         public string Name { get; set; }
         public string UrlHandle { get; set; }

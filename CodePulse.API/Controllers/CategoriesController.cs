@@ -20,17 +20,18 @@ namespace CodePulse.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory(CreateCategoryRequest request)
+        public async Task<IActionResult> CreateCategory(CreateCategoryRequestDto request)
         {
             try
             {
-                _logger.LogInformation("Creating category with name {Name} in API", request.Name);
+                _logger.LogInformation("Creating category with name {Name}", request.Name);
                 var result = await _categoryAppService.CreateAsync(request);
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                _logger.LogError(ex, "An error occurred while creating category with name {Name}", request.Name);
+                return StatusCode(500, "An error occurred while processing your request.");
             }
         }
 
@@ -41,13 +42,16 @@ namespace CodePulse.API.Controllers
         {
             try
             {
+                _logger.LogInformation("Fetching all categories");
                 var categories = await _categoryAppService.GetAllAsync();
                 return Ok(categories);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                _logger.LogError(ex, "An error occurred while fetching all categories");
+                return StatusCode(500, "An error occurred while processing your request.");
             }
+
         }
         [HttpGet]
         [Route("{id:Guid}")]
@@ -55,32 +59,38 @@ namespace CodePulse.API.Controllers
         {
             try
             {
+                _logger.LogInformation("Fetching category with ID: {CategoryId}", id);
+
                 var category = await _categoryAppService.GetById(id);
                 if (category == null)
                 {
+                    _logger.LogWarning("Category not found with ID: {CategoryId}", id);
                     return NotFound();
                 }
                 return Ok(category);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                _logger.LogError(ex, "An error occurred while fetching category with ID: {CategoryId}", id);
+                return StatusCode(500, "An error occurred while processing your request.");
             }
         }
 
 
         [HttpPut]
         [Route("{id:Guid}")]
-        public async Task<IActionResult> UpdateCategory([FromRoute] Guid id, UpdateCategoryRequest request)
+        public async Task<IActionResult> UpdateCategory([FromRoute] Guid id, UpdateCategoryRequestDto request)
         {
             try
             {
-                var category = await _categoryAppService.UpdateAsync(id,request);
+                _logger.LogInformation("Updating category with ID: {CategoryId}", id);
+                var category = await _categoryAppService.UpdateAsync(id, request);
                 return Ok(category);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                _logger.LogError(ex, "An error occurred while updating category with ID: {CategoryId}", id);
+                return StatusCode(500, "An error occurred while processing your request.");
             }
         }
     }

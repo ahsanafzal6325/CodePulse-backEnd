@@ -13,9 +13,9 @@ namespace CodePulse.Application.Common.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<CreateCategoryRequest, Category>();
+            CreateMap<CreateCategoryRequestDto, Category>();
             CreateMap<Category, CategoryDto>();
-            CreateMap<UpdateCategoryRequest, Category>();
+            CreateMap<UpdateCategoryRequestDto, Category>();
         }
     }
 }

@@ -23,7 +23,7 @@ namespace CodePulse.Application.Categories
             _logger = logger;
         }
 
-        public async Task<Category> CreateAsync(CreateCategoryRequest request)
+        public async Task<Category> CreateAsync(CreateCategoryRequestDto request)
         {
 			try
 			{
@@ -64,7 +64,7 @@ namespace CodePulse.Application.Categories
                 throw;
             }
         }
-        public async Task<Category> UpdateAsync(Guid id, UpdateCategoryRequest request)
+        public async Task<Category> UpdateAsync(Guid id, UpdateCategoryRequestDto request)
         {
             try
             {
