@@ -14,5 +14,7 @@ namespace CodePulse.Domain.Repositories
 
         Task<Category?> GetById(Guid id);
         Task UpdateAsync(Category category);
+
+        Task DeleteAsync(Guid id);
     }
 }

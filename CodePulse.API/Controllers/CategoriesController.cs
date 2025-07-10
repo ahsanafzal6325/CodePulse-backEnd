@@ -93,5 +93,27 @@ namespace CodePulse.API.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
+
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> DeleteCategory([FromRoute] Guid id)
+        {
+            try
+            {
+                _logger.LogInformation("Deleting category with ID: {CategoryId}", id);
+                await _categoryAppService.DeleteAsync(id);
+                return Ok("Category Deleted successfully");
+            }
+            catch (KeyNotFoundException knfEx)
+            {
+                _logger.LogWarning(knfEx, "Category not found with ID: {CategoryId}", id);
+                return NotFound("Category not found");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting category with ID: {CategoryId}", id);
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
     }
 }

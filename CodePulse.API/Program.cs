@@ -8,22 +8,29 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ?? Load Serilog config
+// Load additional config (e.g. serilog.json)
 builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
 {
-    config.AddJsonFile("serilog.json", optional: false, reloadOnChange: true);
+    config.AddJsonFile("serilog.json", optional: true, reloadOnChange: true);
 });
 
-// ? Register Serilog BEFORE app.Build()
+// Configure Serilog
 builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
 {
     loggerConfiguration
         .ReadFrom.Configuration(hostingContext.Configuration)
         .Enrich.FromLogContext()
         .WriteTo.Console()
-        .WriteTo.File("Logs/startup-log.txt", rollingInterval: RollingInterval.Day);
+        .WriteTo.File(
+            "Logs/startup-log.txt",
+            rollOnFileSizeLimit: true,
+            fileSizeLimitBytes: 10_000_000, // 10 MB
+            retainedFileCountLimit: null,   // Keep all old rolled files
+            shared: true                    // Safe for multi-process
+        );
 });
 
+// Add services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -37,10 +44,10 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryAppService, CategoryAppService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-// ? App is built AFTER Serilog is configured
+// Build the app
 var app = builder.Build();
 
-// Enable Swagger if in Development
+// Enable Swagger in development
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -48,8 +55,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// ? Enable request logging
 app.UseSerilogRequestLogging();
 
 app.UseCors(options =>
@@ -60,7 +65,6 @@ app.UseCors(options =>
 });
 
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

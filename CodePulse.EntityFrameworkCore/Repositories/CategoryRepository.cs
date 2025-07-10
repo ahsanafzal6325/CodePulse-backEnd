@@ -70,5 +70,21 @@ namespace CodePulse.EntityFrameworkCore.Repositories
                 throw;
             }
         }
+        public async Task DeleteAsync(Guid id)
+        {
+            try
+            {
+                var category = await _dbContext.Categories.FindAsync(id);
+                if (category != null)
+                {
+                    _dbContext.Categories.Remove(category);
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

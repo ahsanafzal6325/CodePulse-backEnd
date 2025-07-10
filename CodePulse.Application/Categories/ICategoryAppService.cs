@@ -14,5 +14,6 @@ namespace CodePulse.Application.Categories
         Task<IEnumerable<CategoryDto>> GetAllAsync();
         Task<CategoryDto> GetById(Guid id);
         Task<Category> UpdateAsync(Guid id, UpdateCategoryRequestDto request);
+        Task<bool> DeleteAsync(Guid id);
     }
 }

@@ -25,18 +25,18 @@ namespace CodePulse.Application.Categories
 
         public async Task<Category> CreateAsync(CreateCategoryRequestDto request)
         {
-			try
-			{
+            try
+            {
                 _logger.LogInformation("Creating category with name {Name} in App service", request.Name);
                 var category = _mapper.Map<Category>(request);
                 var result = await _categoryRepository.CreateAsync(category);
                 return result;
             }
-			catch (Exception)
-			{
+            catch (Exception)
+            {
 
-				throw;
-			}
+                throw;
+            }
         }
         public async Task<IEnumerable<CategoryDto>> GetAllAsync()
         {
@@ -80,6 +80,23 @@ namespace CodePulse.Application.Categories
             catch (Exception)
             {
                 throw;
+            }
+        }
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            try
+            {
+                var category = await _categoryRepository.GetById(id);
+                if (category == null)
+                {
+                    throw new KeyNotFoundException("Category not found");
+                }
+                await _categoryRepository.DeleteAsync(id);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }
