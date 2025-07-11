@@ -33,5 +33,21 @@ namespace CodePulse.API.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
+        [HttpGet]
+        public async Task<List<BlogPostDto>> GetAllBlogPosts()
+        {
+            try
+            {
+                _logger.LogInformation("Retrieving all blog posts");
+                var result = await _blogPostAppService.GetAllAsync();
+                _logger.LogInformation("Retrieved {Count} blog posts", result.Count);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("An error occurred while retrieving blog posts: {Exception}", ex.Message);
+                throw new Exception($"An error occurred while retrieving blog posts: {ex.Message}");
+            }
+        }
     }
 }

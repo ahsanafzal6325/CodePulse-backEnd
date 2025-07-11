@@ -10,5 +10,7 @@ namespace CodePulse.Application.BlogPosts
     public interface IBlogPostsAppService
     {
         Task<CreateBlogPostRequestDto> CreateAsync(CreateBlogPostRequestDto request);
+
+        Task<List<BlogPostDto>> GetAllAsync();
     }
 }

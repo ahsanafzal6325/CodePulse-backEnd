@@ -1,6 +1,7 @@
 ﻿using CodePulse.Domain.Entities;
 using CodePulse.Domain.Repositories;
 using CodePulse.EntityFrameworkCore.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,18 @@ namespace CodePulse.EntityFrameworkCore.Repositories
             catch (Exception ex)
             {
                 throw new Exception("An error occurred while creating the blog post.", ex);
+            }
+        }
+        public async Task<List<BlogPost>> GetAllAsync()
+        {
+            try
+            {
+                var blogPosts = await _dbContext.BlogPosts.ToListAsync();
+                return blogPosts;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving the blog posts.", ex);
             }
         }
     }

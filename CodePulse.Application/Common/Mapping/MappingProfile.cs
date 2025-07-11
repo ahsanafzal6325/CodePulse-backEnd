@@ -20,6 +20,8 @@ namespace CodePulse.Application.Common.Mapping
 
             CreateMap<CreateBlogPostRequestDto, BlogPost>();
             CreateMap<BlogPost, CreateBlogPostRequestDto>();
+            
+            CreateMap<BlogPost, BlogPostDto>();
 
         }
     }

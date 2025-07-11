@@ -36,5 +36,18 @@ namespace CodePulse.Application.BlogPosts
             }
 
         }
+        public async Task<List<BlogPostDto>> GetAllAsync()
+        {
+            try
+            {
+                var blogPosts = await _blogPostRepository.GetAllAsync();
+                var blogPostDtos = _mapper.Map<List<BlogPostDto>>(blogPosts);
+                return blogPostDtos;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }
