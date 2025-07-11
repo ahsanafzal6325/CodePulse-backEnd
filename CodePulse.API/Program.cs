@@ -1,3 +1,4 @@
+using CodePulse.Application.BlogPosts;
 using CodePulse.Application.Categories;
 using CodePulse.Application.Common.Mapping;
 using CodePulse.Domain.Repositories;
@@ -42,6 +43,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryAppService, CategoryAppService>();
+
+builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
+builder.Services.AddScoped<IBlogPostsAppService , BlogPostsAppService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Build the app

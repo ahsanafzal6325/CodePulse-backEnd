@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodePulse.Domain.Entities
+namespace CodePulse.Application.BlogPosts.Dto
 {
-    public class BlogPost
+    public class CreateBlogPostRequestDto
     {
-        public Guid Id { get; set; }
         public string Title { get; set; }
         public string ShortDescription { get; set; }
         public string Content { get; set; }

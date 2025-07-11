@@ -27,7 +27,6 @@ namespace CodePulse.Application.Categories
         {
             try
             {
-                _logger.LogInformation("Creating category with name {Name} in App service", request.Name);
                 var category = _mapper.Map<Category>(request);
                 var result = await _categoryRepository.CreateAsync(category);
                 return result;

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CodePulse.Application.BlogPosts.Dto;
 using CodePulse.Application.Categories.Dto;
 using CodePulse.Domain.Entities;
 using System;
@@ -16,6 +17,10 @@ namespace CodePulse.Application.Common.Mapping
             CreateMap<CreateCategoryRequestDto, Category>();
             CreateMap<Category, CategoryDto>();
             CreateMap<UpdateCategoryRequestDto, Category>();
+
+            CreateMap<CreateBlogPostRequestDto, BlogPost>();
+            CreateMap<BlogPost, CreateBlogPostRequestDto>();
+
         }
     }
 }
