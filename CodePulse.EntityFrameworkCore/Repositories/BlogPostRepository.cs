@@ -44,5 +44,65 @@ namespace CodePulse.EntityFrameworkCore.Repositories
                 throw new Exception("An error occurred while retrieving the blog posts.", ex);
             }
         }
+        public async Task<BlogPost> GetByIdAsync(Guid id)
+        {
+            try
+            {
+                var blogPost = await _dbContext.BlogPosts
+                    .Include(a => a.Categories)
+                    .FirstOrDefaultAsync(bp => bp.Id == id);
+                if (blogPost == null)
+                {
+                    throw new KeyNotFoundException("Blog post not found.");
+                }
+                return blogPost;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving the blog post.", ex);
+            }
+        }
+        public async Task<BlogPost> UpdateAsync(BlogPost blogPost)
+        {
+            try
+            {
+                var existingBlogPost = await _dbContext.BlogPosts
+                    .Include(a => a.Categories)
+                    .FirstOrDefaultAsync(bp => bp.Id == blogPost.Id);
+                if (existingBlogPost == null)
+                {
+                    return null; 
+                }
+
+                _dbContext.Entry(existingBlogPost).CurrentValues.SetValues(blogPost);
+
+                existingBlogPost.Categories = blogPost.Categories ?? new List<Category>();
+
+                await _dbContext.SaveChangesAsync();
+
+                return existingBlogPost;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while updating the blog post.", ex);
+            }
+        }
+        public async Task DeleteAsync(Guid id)
+        {
+            try
+            {
+                var blogPost = await _dbContext.BlogPosts.FindAsync(id);
+                if (blogPost == null)
+                {
+                    throw new KeyNotFoundException("Blog post not found.");
+                }
+                _dbContext.BlogPosts.Remove(blogPost);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while deleting the blog post.", ex);
+            }
+        }
     }
 }

@@ -11,5 +11,9 @@ namespace CodePulse.Domain.Repositories
     {
         Task<BlogPost> CreateAsync(BlogPost blogPost);
         Task<List<BlogPost>> GetAllAsync();
+
+        Task<BlogPost> GetByIdAsync(Guid id);
+        Task<BlogPost> UpdateAsync(BlogPost blogPost);
+        Task DeleteAsync(Guid id);
     }
 }

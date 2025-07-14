@@ -79,5 +79,74 @@ namespace CodePulse.Application.BlogPosts
                 throw;
             }
         }
+
+        public async Task<BlogPostDto> GetByIdAsync(Guid id)
+        {
+            try
+            {
+                var blogPost = await _blogPostRepository.GetByIdAsync(id);
+                if (blogPost == null)
+                {
+                    throw new Exception($"Blog post with ID {id} not found.");
+                }
+                var blogPostDto = _mapper.Map<BlogPostDto>(blogPost);
+                blogPostDto.Categories = new List<CategoryDto>();
+                if (blogPost.Categories != null && blogPost.Categories.Any())
+                {
+                    foreach (var category in blogPost.Categories)
+                    {
+                        var categoryDto = _mapper.Map<CategoryDto>(category);
+                        blogPostDto.Categories.Add(categoryDto);
+                    }
+                }
+                return blogPostDto;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<BlogPostDto> UpdateAsync(Guid id, UpdateBlogPostRequestDto request)
+        {
+            try
+            {
+                var blogPostrequest = _mapper.Map<BlogPost>(request);
+                blogPostrequest.Id = id;
+                if (request.Categories != null && request.Categories.Any())
+                {
+                    blogPostrequest.Categories = new List<Category>();
+                    foreach (var categoryId in request.Categories)
+                    {
+                        var existingCategory = await _categoryRepository.GetById(categoryId);
+                        if (existingCategory is not null)
+                        {
+                            blogPostrequest.Categories.Add(existingCategory);
+                        }
+                    }
+                }
+                var updatedPost = await _blogPostRepository.UpdateAsync(blogPostrequest);
+                return _mapper.Map<BlogPostDto>(updatedPost);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task DeleteAsync(Guid id)
+        {
+            try
+            {
+                var blogPost = await _blogPostRepository.GetByIdAsync(id);
+                if (blogPost == null)
+                {
+                    throw new Exception($"Blog post with ID {id} not found.");
+                }
+                await _blogPostRepository.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

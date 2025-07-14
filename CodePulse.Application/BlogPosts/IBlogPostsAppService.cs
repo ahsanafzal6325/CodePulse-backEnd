@@ -12,5 +12,10 @@ namespace CodePulse.Application.BlogPosts
         Task<BlogPostDto> CreateAsync(CreateBlogPostRequestDto request);
 
         Task<List<BlogPostDto>> GetAllAsync();
+        
+        Task<BlogPostDto> GetByIdAsync(Guid id);
+
+        Task<BlogPostDto> UpdateAsync(Guid id, UpdateBlogPostRequestDto request);
+        Task DeleteAsync(Guid id);
     }
 }
