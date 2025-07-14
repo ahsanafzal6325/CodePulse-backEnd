@@ -36,7 +36,7 @@ namespace CodePulse.EntityFrameworkCore.Repositories
         {
             try
             {
-                var blogPosts = await _dbContext.BlogPosts.ToListAsync();
+                var blogPosts = await _dbContext.BlogPosts.Include(a => a.Categories).ToListAsync();
                 return blogPosts;
             }
             catch (Exception ex)

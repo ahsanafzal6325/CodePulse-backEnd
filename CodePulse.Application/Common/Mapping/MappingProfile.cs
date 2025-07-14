@@ -18,10 +18,19 @@ namespace CodePulse.Application.Common.Mapping
             CreateMap<Category, CategoryDto>();
             CreateMap<UpdateCategoryRequestDto, Category>();
 
-            CreateMap<CreateBlogPostRequestDto, BlogPost>();
-            CreateMap<BlogPost, CreateBlogPostRequestDto>();
-            
-            CreateMap<BlogPost, BlogPostDto>();
+            CreateMap<BlogPost, BlogPostDto>()
+           .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.Categories));
+
+            CreateMap<BlogPostDto, BlogPost>()
+                .ForMember(dest => dest.Categories, opt => opt.Ignore());
+
+
+            CreateMap<BlogPost, CreateBlogPostRequestDto>()
+                .ForMember(a => a.Categories, opt => opt.Ignore());
+
+            CreateMap<CreateBlogPostRequestDto, BlogPost>()
+                .ForMember(a => a.Categories, opt => opt.Ignore());
+          
 
         }
     }

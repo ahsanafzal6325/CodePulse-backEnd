@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CodePulse.Application.Categories.Dto;
+using CodePulse.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +18,6 @@ namespace CodePulse.Application.BlogPosts.Dto
         public DateTime PublishedDate { get; set; }
         public string Author { get; set; }
         public bool IsVisible { get; set; }
+        public List<CategoryDto> Categories { get; set; }
     }
 }
