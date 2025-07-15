@@ -12,5 +12,10 @@ namespace CodePulse.Domain.Entities
         public string Name { get; set; }
         public string UrlHandle { get; set; }
         public ICollection<BlogPost> BlogPosts { get; set; }
+        public bool IsDeleted { get; set; }
+        public Guid? CreatedBy { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public Guid? EditBy { get; set; }
+        public DateTime? EditDate { get; set; }
     }
 }

@@ -22,14 +22,14 @@ namespace CodePulse.API.Controllers
         {
             try
             {
-                _logger.LogInformation("Creating a new blog post with title: {Title}", request.Title);
+                _logger.LogInformation("Creating a new blog post with title: {title}", request.Title);
                 var result = await _blogPostAppService.CreateAsync(request);
-                _logger.LogInformation("BlogPost created successfully with title: {Title}", request.Title);
+                _logger.LogInformation("BlogPost created successfully with title: {title}", request.Title);
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                _logger.LogInformation("An error occurred while creating the blog post with title: {Title}. Exception: {Exception}", request.Title, ex.Message);
+                _logger.LogInformation("An error occurred while creating the blog post with title: {title}. Exception: {Exception}", request.Title, ex.Message);
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }

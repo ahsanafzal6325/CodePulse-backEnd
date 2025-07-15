@@ -1,10 +1,12 @@
 using CodePulse.Application.BlogPosts;
 using CodePulse.Application.Categories;
 using CodePulse.Application.Common.Mapping;
+using CodePulse.Application.Images;
 using CodePulse.Domain.Repositories;
 using CodePulse.EntityFrameworkCore.Data;
 using CodePulse.EntityFrameworkCore.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +35,7 @@ builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
 
 // Add services
 builder.Services.AddControllers();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -46,6 +49,8 @@ builder.Services.AddScoped<ICategoryAppService, CategoryAppService>();
 
 builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
 builder.Services.AddScoped<IBlogPostsAppService , BlogPostsAppService>();
+builder.Services.AddScoped<IimageRepository , ImageRepository>();
+builder.Services.AddScoped<IimagesAppService, ImagesAppService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Build the app
@@ -67,7 +72,11 @@ app.UseCors(options =>
     options.AllowAnyMethod();
     options.AllowAnyHeader();
 });
-
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+    RequestPath = "/Images"
+});
 app.UseAuthorization();
 app.MapControllers();
 
