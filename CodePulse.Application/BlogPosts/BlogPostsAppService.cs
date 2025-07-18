@@ -148,5 +148,33 @@ namespace CodePulse.Application.BlogPosts
                 throw;
             }
         }
+
+        public async Task<BlogPostDto?> GetByUrlhandle(string urlhandle)
+        {
+            try
+            {
+                var blogPost = await _blogPostRepository.GetByUrlHandle(urlhandle);
+                if (blogPost == null)
+                {
+                    throw new Exception($"Blog post with url {urlhandle} not found.");
+                }
+                var blogPostDto = _mapper.Map<BlogPostDto>(blogPost);
+                blogPostDto.Categories = new List<CategoryDto>();
+                if (blogPost.Categories != null && blogPost.Categories.Any())
+                {
+                    foreach (var category in blogPost.Categories)
+                    {
+                        var categoryDto = _mapper.Map<CategoryDto>(category);
+                        blogPostDto.Categories.Add(categoryDto);
+                    }
+                }
+                return blogPostDto;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

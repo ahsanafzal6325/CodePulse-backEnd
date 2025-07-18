@@ -124,5 +124,38 @@ namespace CodePulse.API.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
+
+
+
+        // GET: {apiBaseurl}/api/blogPosts/{urlhandle}
+
+        [HttpGet]
+        [Route("{urlHandle}")]
+        public async Task<IActionResult> HetBlogPostByUrlhandel([FromRoute] string urlHandle)
+        {
+            try
+            {
+                
+                if (string.IsNullOrEmpty(urlHandle))
+                {
+                    _logger.LogWarning("URL handle is null or empty");
+                    return BadRequest("URL handle is required");
+                }
+                _logger.LogInformation("Retrieving blog post with URL handle: {UrlHandle}", urlHandle);
+                var result = await _blogPostAppService.GetByUrlhandle(urlHandle); // Adjust this line based on your actual method to get by URL handle
+                if (result == null)
+                {
+                    _logger.LogWarning("Blog post with URL handle: {UrlHandle} not found", urlHandle);
+                    return NotFound();
+                }
+                _logger.LogInformation("Retrieved blog post with URL handle: {UrlHandle}", urlHandle);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("An error occurred while retrieving blog post with URL handle: {UrlHandle}. Exception: {Exception}", HttpContext.Request.RouteValues["urlHandle"], ex.Message);
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

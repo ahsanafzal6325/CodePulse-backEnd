@@ -104,5 +104,25 @@ namespace CodePulse.EntityFrameworkCore.Repositories
                 throw new Exception("An error occurred while deleting the blog post.", ex);
             }
         }
+
+        public async Task<BlogPost?> GetByUrlHandle(string urlHandle)
+        {
+            try
+            {
+                var blogPost = await _dbContext.BlogPosts
+                    .Include(a => a.Categories)
+                    .FirstOrDefaultAsync(bp => bp.UrlHandle == urlHandle);
+                if (blogPost == null)
+                {
+                    throw new KeyNotFoundException("Blog post not found.");
+                }
+                return blogPost;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }
