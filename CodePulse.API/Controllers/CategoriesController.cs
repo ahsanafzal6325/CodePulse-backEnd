@@ -1,6 +1,8 @@
 ﻿using CodePulse.Application.Categories;
 using CodePulse.Application.Categories.Dto;
 using CodePulse.Domain.Entities;
+using CodePulse.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +22,7 @@ namespace CodePulse.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = nameof(UserRolesEnum.Writer))]
         public async Task<IActionResult> CreateCategory(CreateCategoryRequestDto request)
         {
             try
@@ -37,11 +40,11 @@ namespace CodePulse.API.Controllers
 
 
         [HttpGet]
-
         public async Task<IActionResult> GetAllCategories()
         {
             try
             {
+                var role = UserRolesEnum.Reader.GetDescription();
                 _logger.LogInformation("Fetching all categories");
                 var categories = await _categoryAppService.GetAllAsync();
                 return Ok(categories);
@@ -79,6 +82,7 @@ namespace CodePulse.API.Controllers
 
         [HttpPut]
         [Route("{id:Guid}")]
+        [Authorize(Roles = nameof(UserRolesEnum.Writer))]
         public async Task<IActionResult> UpdateCategory([FromRoute] Guid id, UpdateCategoryRequestDto request)
         {
             try
@@ -96,6 +100,7 @@ namespace CodePulse.API.Controllers
 
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize(Roles = nameof(UserRolesEnum.Writer))]
         public async Task<IActionResult> DeleteCategory([FromRoute] Guid id)
         {
             try

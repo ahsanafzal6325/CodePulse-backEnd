@@ -1,5 +1,7 @@
 ﻿using CodePulse.Application.BlogPosts;
 using CodePulse.Application.BlogPosts.Dto;
+using CodePulse.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +20,7 @@ namespace CodePulse.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = nameof(UserRolesEnum.Writer))]
         public async Task<IActionResult> CreateBlogPost(CreateBlogPostRequestDto request)
         {
             try
@@ -79,6 +82,7 @@ namespace CodePulse.API.Controllers
         // PUT: api/BlogPosts/{id}
         [HttpPut]
         [Route("{id:Guid}")]
+        [Authorize(Roles = nameof(UserRolesEnum.Writer))]
         public async Task<IActionResult> UpdateBlogPost(Guid id, UpdateBlogPostRequestDto request)
         {
             try
@@ -102,6 +106,7 @@ namespace CodePulse.API.Controllers
         // DELETE: api/BlogPosts/{id}
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize(Roles = nameof(UserRolesEnum.Writer))]
         public async Task<IActionResult> DeleteBlogPost(Guid id)
         {
             try
