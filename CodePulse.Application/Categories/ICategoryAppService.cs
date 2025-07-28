@@ -1,5 +1,6 @@
 ﻿using CodePulse.Application.Categories.Dto;
 using CodePulse.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace CodePulse.Application.Categories
         Task<CategoryDto> GetById(Guid id);
         Task<Category> UpdateAsync(Guid id, UpdateCategoryRequestDto request);
         Task<bool> DeleteAsync(Guid id);
+        Task<int> GetCategoriesCount();
     }
 }

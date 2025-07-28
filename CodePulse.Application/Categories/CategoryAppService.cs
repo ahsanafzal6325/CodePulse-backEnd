@@ -42,7 +42,10 @@ namespace CodePulse.Application.Categories
         {
             try
             {
-                var categories = await _categoryRepository.GetAllAsync(request.query,request.sortBy ,request.sortDirection);
+                var categories = await _categoryRepository.GetAllAsync(request.query,request.sortBy,
+                    request.sortDirection,
+                    request.pageNumber,
+                    request.pageSize);
                 var categoriesDto = _mapper.Map<List<CategoryDto>>(categories);
                 return categoriesDto;
             }
@@ -97,6 +100,18 @@ namespace CodePulse.Application.Categories
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public async Task<int> GetCategoriesCount()
+        {
+            try
+            {
+                return await _categoryRepository.GetCategoriesCount();
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
     }

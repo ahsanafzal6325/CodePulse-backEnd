@@ -32,7 +32,11 @@ namespace CodePulse.EntityFrameworkCore.Repositories
                 throw;
             }
         }
-        public async Task<IEnumerable<Category>> GetAllAsync(string? query = null, string? sortBy = null, string? sortDirection = null)
+        public async Task<IEnumerable<Category>> GetAllAsync(string? query = null,
+            string? sortBy = null,
+            string? sortDirection = null,
+            int? pageNumber = 1,
+            int? pageSize = 100)
         {
             try
             {
@@ -63,6 +67,9 @@ namespace CodePulse.EntityFrameworkCore.Repositories
                             .OrderByDescending(x => x.UrlHandle);
                     }
                 }
+                // Pagination
+                var skip = (pageNumber - 1) * pageSize;
+                categories = categories.Skip(skip ?? 0).Take(pageSize ?? 100);
 
                 //var categories = await _dbContext.Categories.ToListAsync();
                 return await categories.ToListAsync();
@@ -111,6 +118,18 @@ namespace CodePulse.EntityFrameworkCore.Repositories
             }
             catch (Exception)
             {
+                throw;
+            }
+        }
+        public async Task<int> GetCategoriesCount()
+        {
+            try
+            {
+                return await _dbContext.Categories.CountAsync();
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
         }

@@ -4,6 +4,7 @@ using CodePulse.Domain.Entities;
 using CodePulse.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodePulse.API.Controllers
@@ -120,5 +121,22 @@ namespace CodePulse.API.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
+
+        [HttpGet]
+        [Route("count")]
+        public async Task<IActionResult> GetCategoriesCount()
+        {
+            try
+            {
+                var count = await _categoryAppService.GetCategoriesCount();
+                return Ok(count);
+            }
+            catch (Exception)
+            {
+                _logger.LogError("An error occurred while getting categories count");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        } 
+
     }
 }

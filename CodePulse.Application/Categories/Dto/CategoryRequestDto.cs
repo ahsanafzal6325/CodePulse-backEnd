@@ -11,5 +11,7 @@ namespace CodePulse.Application.Categories.Dto
         public string? query { get; set; }
         public string? sortBy { get; set; }
         public string? sortDirection { get; set; }
+        public int? pageNumber { get; set; }
+        public int? pageSize { get; set; }
     }
 }
