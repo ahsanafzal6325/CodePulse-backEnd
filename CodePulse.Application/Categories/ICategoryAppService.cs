@@ -11,7 +11,7 @@ namespace CodePulse.Application.Categories
     public interface ICategoryAppService
     {
         Task<Category> CreateAsync(CreateCategoryRequestDto category);
-        Task<IEnumerable<CategoryDto>> GetAllAsync();
+        Task<IEnumerable<CategoryDto>> GetAllAsync(CategoryRequestDto request);
         Task<CategoryDto> GetById(Guid id);
         Task<Category> UpdateAsync(Guid id, UpdateCategoryRequestDto request);
         Task<bool> DeleteAsync(Guid id);

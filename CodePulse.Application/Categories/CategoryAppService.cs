@@ -2,6 +2,7 @@
 using CodePulse.Application.Categories.Dto;
 using CodePulse.Domain.Entities;
 using CodePulse.Domain.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -37,11 +38,11 @@ namespace CodePulse.Application.Categories
                 throw;
             }
         }
-        public async Task<IEnumerable<CategoryDto>> GetAllAsync()
+        public async Task<IEnumerable<CategoryDto>> GetAllAsync(CategoryRequestDto request)
         {
             try
             {
-                var categories = await _categoryRepository.GetAllAsync();
+                var categories = await _categoryRepository.GetAllAsync(request.query,request.sortBy ,request.sortDirection);
                 var categoriesDto = _mapper.Map<List<CategoryDto>>(categories);
                 return categoriesDto;
             }

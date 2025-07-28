@@ -10,7 +10,7 @@ namespace CodePulse.Domain.Repositories
     public interface ICategoryRepository
     {
         Task<Category> CreateAsync(Category category);
-        Task<IEnumerable<Category>> GetAllAsync();
+        Task<IEnumerable<Category>> GetAllAsync(string? query = null, string? sprtBy = null,string? sortFor= null);
 
         Task<Category?> GetById(Guid id);
         Task UpdateAsync(Category category);

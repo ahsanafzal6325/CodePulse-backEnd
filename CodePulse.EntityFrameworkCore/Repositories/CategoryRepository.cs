@@ -32,12 +32,40 @@ namespace CodePulse.EntityFrameworkCore.Repositories
                 throw;
             }
         }
-        public async Task<IEnumerable<Category>> GetAllAsync()
+        public async Task<IEnumerable<Category>> GetAllAsync(string? query = null, string? sortBy = null, string? sortDirection = null)
         {
             try
             {
-                var categories = await _dbContext.Categories.ToListAsync();
-                return categories;
+                // Query
+                var categories = _dbContext.Categories.AsQueryable();
+
+                // Filtering 
+                if (!string.IsNullOrWhiteSpace(query)) 
+                {
+                    categories = categories.Where(x => x.Name.Contains(query));
+                }
+
+                //Sorting
+                if (!string.IsNullOrWhiteSpace(sortBy))
+                {
+                    if (string.Equals(sortBy,"Name", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var isAsceding = string.Equals(sortDirection, "asc", StringComparison.OrdinalIgnoreCase) ? true : false;
+
+                        categories = isAsceding ? categories.OrderBy(x => x.Name) : categories
+                            .OrderByDescending(x => x.Name);
+                    }
+                    if (string.Equals(sortBy, "URL", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var isAsceding = string.Equals(sortDirection, "asc", StringComparison.OrdinalIgnoreCase) ? true : false;
+
+                        categories = isAsceding ? categories.OrderBy(x => x.UrlHandle) : categories
+                            .OrderByDescending(x => x.UrlHandle);
+                    }
+                }
+
+                //var categories = await _dbContext.Categories.ToListAsync();
+                return await categories.ToListAsync();
             }
             catch (Exception)
             {

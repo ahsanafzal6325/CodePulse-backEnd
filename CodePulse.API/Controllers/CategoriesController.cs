@@ -22,7 +22,7 @@ namespace CodePulse.API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = nameof(UserRolesEnum.Writer))]
+        [Authorize]
         public async Task<IActionResult> CreateCategory(CreateCategoryRequestDto request)
         {
             try
@@ -40,13 +40,13 @@ namespace CodePulse.API.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCategories()
+        public async Task<IActionResult> GetAllCategories([FromQuery] CategoryRequestDto request)
         {
             try
             {
                 var role = UserRolesEnum.Reader.GetDescription();
                 _logger.LogInformation("Fetching all categories");
-                var categories = await _categoryAppService.GetAllAsync();
+                var categories = await _categoryAppService.GetAllAsync(request);
                 return Ok(categories);
             }
             catch (Exception ex)
@@ -100,7 +100,7 @@ namespace CodePulse.API.Controllers
 
         [HttpDelete]
         [Route("{id:Guid}")]
-        [Authorize(Roles = nameof(UserRolesEnum.Writer))]
+        [Authorize]
         public async Task<IActionResult> DeleteCategory([FromRoute] Guid id)
         {
             try
