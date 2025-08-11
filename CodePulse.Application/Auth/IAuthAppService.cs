@@ -11,5 +11,6 @@ namespace CodePulse.Application.Auth
     {
         Task<RegisterResultDto> RegisterAsync(RegisterRequestDto request);
         Task<LoginResponseDto> LoginAsync(LoginRequestDto request);
+        Task<List<UsersDto>> GetAllUsers();
     }
 }

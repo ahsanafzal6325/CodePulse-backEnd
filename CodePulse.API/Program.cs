@@ -1,6 +1,8 @@
+using CodePulse.API.Hubs;
 using CodePulse.Application.Auth;
 using CodePulse.Application.BlogPosts;
 using CodePulse.Application.Categories;
+using CodePulse.Application.ChatAppService;
 using CodePulse.Application.Common.Mapping;
 using CodePulse.Application.Images;
 using CodePulse.Domain.Repositories;
@@ -8,6 +10,7 @@ using CodePulse.EntityFrameworkCore.Data;
 using CodePulse.EntityFrameworkCore.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.FileProviders;
@@ -44,6 +47,7 @@ builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -64,11 +68,14 @@ builder.Services.AddScoped<IBlogPostsAppService , BlogPostsAppService>();
 builder.Services.AddScoped<IimageRepository , ImageRepository>();
 builder.Services.AddScoped<IimagesAppService, ImagesAppService>();
 builder.Services.AddScoped<IAuthAppService, AuthAppService>();
+builder.Services.AddScoped<IChatAppService, ChatAppService>();
+builder.Services.AddScoped<IChatRepository, ChatRepository>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 
 builder.Services.AddIdentityCore<IdentityUser>()
     .AddRoles<IdentityRole>()
+    .AddSignInManager<SignInManager<IdentityUser>>()
     .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("CodePulse")
     .AddEntityFrameworkStores<AuthDbContext>()
     .AddDefaultTokenProviders();
@@ -91,6 +98,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddCookie(IdentityConstants.ApplicationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -106,20 +114,46 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = 
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
+        options.Authority = "https://localhost:44372";
+        options.Audience = "https://localhost:4200";
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) &&
+                    path.StartsWithSegments("/hubs/chat"))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
-// Build the app
+
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAngular", policy =>
+        policy.WithOrigins("http://localhost:4200") 
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials());
+});
+builder.Services.AddAuthorization();
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<IUserIdProvider, SubUserIdProvider>();
 var app = builder.Build();
 
-// Enable Swagger in development
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowAngular");
+app.MapHub<ChatHub>("/hubs/chat");
 app.UseHttpsRedirection();
 app.UseSerilogRequestLogging();
-
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseCors(options =>
 {
     options.AllowAnyOrigin();

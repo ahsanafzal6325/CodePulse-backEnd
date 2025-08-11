@@ -16,12 +16,14 @@ namespace CodePulse.Application.Auth
     public class AuthAppService : IAuthAppService
     {
         private UserManager<IdentityUser> _userManager { get; }
+        private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _configuration;
 
-        public AuthAppService(UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public AuthAppService(UserManager<IdentityUser> userManager, IConfiguration configuration, SignInManager<IdentityUser> signInManager)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _signInManager = signInManager;
         }
 
         public async Task<RegisterResultDto> RegisterAsync(RegisterRequestDto request)
@@ -67,6 +69,7 @@ namespace CodePulse.Application.Auth
                     if (checkPasswordResult)
                     {
                         var roles = await _userManager.GetRolesAsync(identityUser);
+                        await _signInManager.SignInAsync(identityUser, isPersistent: false);
                         var jwtToken = CreateJwtToken(identityUser, roles.ToList());
                         return new LoginResponseDto
                         {
@@ -84,12 +87,32 @@ namespace CodePulse.Application.Auth
             }
            
         }
-
+        public async Task<List<UsersDto>> GetAllUsers()
+        {
+            try
+            {
+                var users = _userManager.Users.ToList();
+                var userDtos = users.Select(user => new UsersDto
+                {
+                    userId = Guid.Parse(user.Id),
+                    Email = user.Email,
+                    Name = user.UserName,
+                }).ToList();
+                return userDtos;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         private string CreateJwtToken(IdentityUser user , List<string> roles)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.NameIdentifier, user.Id), 
+                new Claim("sub", user.Id),
+                new Claim(ClaimTypes.Name, user.UserName ?? string.Empty),
+                new Claim(ClaimTypes.Email, user.Email ?? string.Empty)
             };
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Name, role)));
 
@@ -108,6 +131,7 @@ namespace CodePulse.Application.Auth
             return new JwtSecurityTokenHandler().WriteToken(token);
 
         }
+
 
     }
 }

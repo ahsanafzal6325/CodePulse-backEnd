@@ -66,5 +66,20 @@ namespace CodePulse.API.Controllers
                 return StatusCode(500, "An unexpected error occurred.");
             }
         }
+        [HttpGet]
+        [Route("users")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            try
+            {
+                var users = await _authAppService.GetAllUsers();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while retrieving users");
+                return StatusCode(500, "An unexpected error occurred.");
+            }
+        }
     }
 }

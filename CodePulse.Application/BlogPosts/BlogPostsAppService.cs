@@ -61,7 +61,7 @@ namespace CodePulse.Application.BlogPosts
                 }
                 return blogPostDto;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -74,7 +74,7 @@ namespace CodePulse.Application.BlogPosts
                 var blogPostDtos = _mapper.Map<List<BlogPostDto>>(blogPosts);
                 return blogPostDtos;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -101,7 +101,7 @@ namespace CodePulse.Application.BlogPosts
                 }
                 return blogPostDto;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -127,7 +127,7 @@ namespace CodePulse.Application.BlogPosts
                 var updatedPost = await _blogPostRepository.UpdateAsync(blogPostrequest);
                 return _mapper.Map<BlogPostDto>(updatedPost);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -143,7 +143,7 @@ namespace CodePulse.Application.BlogPosts
                 }
                 await _blogPostRepository.DeleteAsync(id);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

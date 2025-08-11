@@ -82,7 +82,6 @@ namespace CodePulse.API.Controllers
         // PUT: api/BlogPosts/{id}
         [HttpPut]
         [Route("{id:Guid}")]
-        [Authorize(Roles = nameof(UserRolesEnum.Writer))]
         public async Task<IActionResult> UpdateBlogPost(Guid id, UpdateBlogPostRequestDto request)
         {
             try

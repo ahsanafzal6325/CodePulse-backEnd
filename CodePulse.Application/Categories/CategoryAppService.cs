@@ -34,7 +34,6 @@ namespace CodePulse.Application.Categories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -97,9 +96,9 @@ namespace CodePulse.Application.Categories
                 await _categoryRepository.DeleteAsync(id);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
