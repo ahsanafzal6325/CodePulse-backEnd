@@ -5,8 +5,10 @@ using CodePulse.Application.Categories;
 using CodePulse.Application.ChatAppService;
 using CodePulse.Application.Common.Mapping;
 using CodePulse.Application.Images;
+using CodePulse.Application.Products;
 using CodePulse.Domain.Repositories;
 using CodePulse.EntityFrameworkCore.Data;
+using CodePulse.EntityFrameworkCore.Data.PostGreSql;
 using CodePulse.EntityFrameworkCore.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -59,6 +61,8 @@ builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("CodePulseAuthDb"));
     options.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
 });
+builder.Services.AddDbContext<PostgresDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryAppService, CategoryAppService>();
@@ -70,6 +74,10 @@ builder.Services.AddScoped<IimagesAppService, ImagesAppService>();
 builder.Services.AddScoped<IAuthAppService, AuthAppService>();
 builder.Services.AddScoped<IChatAppService, ChatAppService>();
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductAppService, ProductAppService>();
+
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 

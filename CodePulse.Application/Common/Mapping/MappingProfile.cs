@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CodePulse.Application.BlogPosts.Dto;
 using CodePulse.Application.Categories.Dto;
+using CodePulse.Application.Products.Dto;
 using CodePulse.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ namespace CodePulse.Application.Common.Mapping
         {
             CreateMap<CreateCategoryRequestDto, Category>();
             CreateMap<Category, CategoryDto>();
+            CreateMap<Product, ProductDto>();
+            CreateMap<ProductDto, Product>();
             CreateMap<UpdateCategoryRequestDto, Category>();
 
             CreateMap<BlogPost, BlogPostDto>()

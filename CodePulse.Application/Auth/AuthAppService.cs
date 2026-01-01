@@ -40,7 +40,7 @@ namespace CodePulse.Application.Auth
                 var identityResult = await _userManager.CreateAsync(user, request.Password);
                 if (identityResult.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, UserRolesEnum.Reader.GetDescription());
+                    await _userManager.AddToRoleAsync(user, UserRolesEnum.Writer.GetDescription());
                     resultDto.Success = true;
                 }
                 else

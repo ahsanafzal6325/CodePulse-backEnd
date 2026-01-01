@@ -4,6 +4,7 @@ using CodePulse.EntityFrameworkCore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodePulse.EntityFrameworkCore.Migrations.AuthDb
 {
     [DbContext(typeof(AuthDbContext))]
-    partial class AuthDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251230092501_neww")]
+    partial class neww
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,6 +50,22 @@ namespace CodePulse.EntityFrameworkCore.Migrations.AuthDb
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "60cfaf67-78b0-4885-a9f4-0e20f73cef92",
+                            ConcurrencyStamp = "60cfaf67-78b0-4885-a9f4-0e20f73cef92",
+                            Name = "READER",
+                            NormalizedName = "READER"
+                        },
+                        new
+                        {
+                            Id = "d1c3f8b2-4e5a-4f6b-8c7d-9e0f1a2b3c4d",
+                            ConcurrencyStamp = "d1c3f8b2-4e5a-4f6b-8c7d-9e0f1a2b3c4d",
+                            Name = "WRITER",
+                            NormalizedName = "WRITER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -137,6 +156,24 @@ namespace CodePulse.EntityFrameworkCore.Migrations.AuthDb
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "aaa39788-f536-4e27-86da-deba74c448c1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "67941c9f-c384-47a5-a89d-1ae63ff05fba",
+                            Email = "admin@codepulse.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@CODEPULSE.COM",
+                            NormalizedUserName = "ADMIN@CODEPULSE.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAE...",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "36cf9436-2093-4d18-8f80-dc77006c005d",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@codepulse.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -199,6 +236,18 @@ namespace CodePulse.EntityFrameworkCore.Migrations.AuthDb
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "aaa39788-f536-4e27-86da-deba74c448c1",
+                            RoleId = "60cfaf67-78b0-4885-a9f4-0e20f73cef92"
+                        },
+                        new
+                        {
+                            UserId = "aaa39788-f536-4e27-86da-deba74c448c1",
+                            RoleId = "d1c3f8b2-4e5a-4f6b-8c7d-9e0f1a2b3c4d"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
