@@ -53,7 +53,6 @@ namespace CodePulse.API.Controllers
             try
             {
                 var result = await _authAppService.LoginAsync(request);
-                var resultas = await _authAppService.LoginAsync(request);
                 return Ok(result);
             }
             catch (UnauthorizedAccessException ex)
