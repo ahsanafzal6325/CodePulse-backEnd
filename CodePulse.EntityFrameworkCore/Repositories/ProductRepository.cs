@@ -15,9 +15,17 @@ namespace CodePulse.EntityFrameworkCore.Repositories
 
         public async Task<Product> CreateAsync(Product product)
         {
-            await _dbContext.Products.AddAsync(product);
-            await _dbContext.SaveChangesAsync();
-            return product;
+            try
+            {
+                await _dbContext.Products.AddAsync(product);
+                await _dbContext.SaveChangesAsync();
+                return product;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            
         }
     }
 }
